@@ -194,13 +194,13 @@ body.route-thanks .join-inner{animation:joinIn .45s ease both}
 .hero-inner h1.reveal.in,.hero-inner .lede.reveal.in{transform:none}
 @media (prefers-reduced-motion:reduce){.hero-inner h1.reveal,.hero-inner .lede.reveal{transform:none}}
 
-/* two-column hero: copy left, VSL right */
-.hero-grid2{width:min(1120px,92vw);margin-inline:auto;display:grid;grid-template-columns:1.02fr .98fr;gap:clamp(2rem,5vw,4rem);align-items:center}
-@media (max-width:900px){.hero-grid2{grid-template-columns:1fr;gap:2.25rem}}
-.hero-copy{text-align:left;display:flex;flex-direction:column;align-items:flex-start}
-.hero-copy h1{font-size:clamp(2.15rem,4.4vw,3.6rem);letter-spacing:-.035em;line-height:1.04;max-width:15ch}
+/* hero: centred single column (VSL column removed until we have a video —
+   restore by re-adding .hero-vsl markup and the two-column values below) */
+.hero-grid2{width:min(820px,92vw);margin-inline:auto;display:grid;grid-template-columns:1fr;gap:clamp(2rem,5vw,4rem);align-items:center}
+.hero-copy{text-align:center;display:flex;flex-direction:column;align-items:center}
+.hero-copy h1{font-size:clamp(2.15rem,4.4vw,3.6rem);letter-spacing:-.035em;line-height:1.04;max-width:17ch}
 .hero-copy .lede{margin-top:1.35rem;max-width:52ch;color:var(--muted);font-size:clamp(1.02rem,1.5vw,1.2rem);line-height:1.55}
-.hero-copy .wl-proof{margin-top:1.8rem;justify-content:flex-start}
+.hero-copy .wl-proof{margin-top:1.8rem;justify-content:center}
 .hero-copy .hero-join{margin-top:1.5rem}
 .hero-copy .offer-line{margin-top:1.1rem;font-size:.88rem;color:var(--muted)}
 .hero-copy>.reveal:nth-child(1){transition-delay:0ms}
@@ -397,12 +397,6 @@ footer .fcol a:hover{opacity:1}
         </div>
         <a class="btn btn-primary hero-join reveal" href="#join">Join the waitlist</a>
         <p class="offer-line reveal">Founding members lock in <b class="pop">50% off, for life</b>. No credit card to join.</p>
-      </div>
-      <div class="hero-vsl reveal">
-        <div class="vsl-frame">
-          <div class="vsl-play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
-          <span class="vsl-label">Your VSL goes here</span>
-        </div>
       </div>
     </div>
   </section>
