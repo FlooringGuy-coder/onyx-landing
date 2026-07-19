@@ -231,7 +231,26 @@ body.route-thanks .join-inner{animation:joinIn .45s ease both}
 .pillar-row li{display:inline-flex;align-items:center;gap:.4rem;font-family:var(--display);font-weight:500;font-size:clamp(.95rem,1.45vw,1.1rem);color:var(--text);white-space:nowrap}
 .pillar-row li svg{width:.95em;height:.95em;flex:none;color:var(--accent)}
 .pillar-row li:not(:last-child)::after{content:"|";margin-left:.85rem;color:var(--accent);font-weight:400}
-@media (max-width:520px){.pillar-row li:not(:last-child)::after{display:none}.pillar-row{gap:.45rem 1rem}}
+/* phone: let copy fill each line instead of breaking where desktop wants it,
+   and pull the stack together — desktop spacing is untouched */
+@media (max-width:520px){
+  .hero-body br{display:none}
+  .hero-body p{line-height:1.5}
+  .hero-copy .hero-sub{margin-top:.65rem}
+  .hero-copy .lede{margin-top:.85rem;line-height:1.5}
+  .hero-body{margin-top:.55rem}
+  .hero-pillars{margin-top:.95rem}
+  .hero-copy .wl-proof{margin-top:1.05rem}
+  .hero-copy .hero-join{margin-top:1.05rem}
+  .hero-copy .offer-line{margin-top:.8rem}
+}
+/* phone: all five pillars hold one line — separators drop, type scales with viewport */
+@media (max-width:520px){
+  .pillar-row li:not(:last-child)::after{display:none}
+  .pillar-row{flex-wrap:nowrap;gap:0 clamp(.3rem,1.7vw,.7rem)}
+  .pillar-row li{font-size:clamp(.6rem,2.55vw,.95rem);gap:.2rem}
+  .pillar-row li svg{width:.9em;height:.9em}
+}
 .hero-copy .wl-proof{margin-top:1.8rem;justify-content:center}
 .hero-copy .hero-join{margin-top:1.5rem}
 .hero-copy .offer-line{margin-top:1.1rem;font-size:.88rem;color:var(--muted);text-align:center}
