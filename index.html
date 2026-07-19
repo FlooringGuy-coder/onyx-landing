@@ -188,12 +188,10 @@ body.route-thanks .join-view{display:none}
    plus the status-bar inset or the block lands low by half the nav */
 body.route-thanks .thanks-view{display:grid;place-items:center;min-height:100dvh;margin-top:calc(-64px - env(safe-area-inset-top,0px));padding:clamp(1rem,4vh,3rem) 0}
 body.route-thanks .join-inner{animation:joinIn .45s ease both}
-.thanks-mark{width:64px;height:64px;border-radius:50%;background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent);display:grid;place-items:center;margin-bottom:.5rem}
-.thanks-mark svg{width:30px;height:30px}
 .thanks-cta{display:flex;flex-direction:column;gap:.7rem;margin-top:2rem;width:100%;max-width:22rem}
 .thanks-cta .btn{width:100%;justify-content:center;padding-block:.85rem}
 /* longer congratulations headline needs a smaller size and a wider measure */
-.join-inner h1.thanks-h1{font-size:clamp(1.6rem,3.2vw,2.25rem);line-height:1.2;max-width:24ch}
+.join-inner h1.thanks-h1{font-size:clamp(1.6rem,3.2vw,2.25rem);line-height:1.2;max-width:24ch;color:var(--accent)}
 
 .hero-inner .wl-done{margin-top:1.4rem;text-align:center}
 .hero-inner .offer-line{margin-top:1.15rem;font-size:.9rem;color:var(--muted)}
@@ -201,9 +199,11 @@ body.route-thanks .join-inner{animation:joinIn .45s ease both}
 
 /* subtle polish (kinso-restrained) */
 .badge{display:inline-flex;align-items:center;gap:.55rem;font-family:var(--mono);font-size:.72rem;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);background:var(--card);border:1px solid var(--line);padding:.44rem .85rem .44rem .72rem;border-radius:999px;box-shadow:var(--shadow)}
+/* confirmation pill reads as brand, not muted chrome */
+.thanks-view .badge{color:var(--accent);border-color:var(--accent)}
 .badge-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);flex:none;animation:badgePulse 2.6s ease-out infinite}
 @keyframes pillarScroll{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}
-@media (prefers-reduced-motion:reduce){.pillar-track{animation:none;justify-content:center}}
+@media (prefers-reduced-motion:reduce){.pillar-track{animation:none;justify-content:center}.pillar-track .pillar-dup{display:none}}
 @keyframes badgePulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--accent) 55%,transparent)}70%{box-shadow:0 0 0 7px transparent}100%{box-shadow:0 0 0 0 transparent}}
 @media (prefers-reduced-motion:reduce){.badge-dot{animation:none}}
 .hero-inner h1{letter-spacing:-.035em}
@@ -240,7 +240,7 @@ body.route-thanks .join-inner{animation:joinIn .45s ease both}
 /* hero: centred single column (VSL column removed until we have a video —
    restore by re-adding .hero-vsl markup and the two-column values below) */
 .hero-grid2{width:min(820px,92vw);margin-inline:auto;display:grid;grid-template-columns:1fr;gap:clamp(2rem,5vw,4rem);align-items:center}
-.hero-copy{text-align:center;display:flex;flex-direction:column;align-items:center}
+.hero-copy{text-align:center;display:flex;flex-direction:column;align-items:center;min-width:0}
 .hero-copy h1{font-size:clamp(2.15rem,4.4vw,3.6rem);letter-spacing:-.035em;line-height:1.04;max-width:22ch}
 .hero-copy h1 .accent{color:var(--accent);font-weight:inherit}
 .hero-copy .hero-sub{margin-top:1rem;font-family:var(--display);font-weight:500;font-size:clamp(1.08rem,1.9vw,1.4rem);letter-spacing:-.015em;color:var(--text)}
@@ -253,13 +253,14 @@ body.route-thanks .join-inner{animation:joinIn .45s ease both}
 /* the word "onyx" set as the wordmark itself — sized to sit on the text baseline */
 .inline-wordmark{height:.72em;width:auto;display:inline-block;vertical-align:-.18em}
 /* capability row — blue ticks, pipe separators, AI credit underneath */
-.hero-pillars{margin-top:1.4rem}
-.pillar-viewport{overflow:visible}
-.pillar-track{display:flex;justify-content:center}
-.pillar-track .pillar-dup{display:none}
+/* min-width:0 stops the max-content marquee track forcing these boxes wide */
+.hero-pillars{margin-top:1.4rem;width:100%;min-width:0}
 .pillar-row{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:.5rem .85rem;list-style:none;margin:0;padding:0}
 .pillar-row li{display:inline-flex;align-items:center;gap:.4rem;font-family:var(--display);font-weight:500;font-size:clamp(.95rem,1.45vw,1.1rem);color:var(--text);white-space:nowrap}
 .pillar-row li svg{width:.95em;height:.95em;flex:none;color:var(--accent)}
+.pillar-viewport{overflow:visible;width:100%;min-width:0}
+.pillar-track{display:flex;justify-content:center}
+.pillar-track .pillar-dup{display:none}
 .pillar-row li:not(:last-child)::after{content:"|";margin-left:.85rem;color:var(--accent);font-weight:400}
 /* phone: let copy fill each line instead of breaking where desktop wants it,
    and pull the stack together — desktop spacing is untouched */
@@ -277,11 +278,10 @@ body.route-thanks .join-inner{animation:joinIn .45s ease both}
 /* phone: all five pillars hold one line — separators drop, type scales with viewport */
 @media (max-width:520px){
   .pillar-row li:not(:last-child)::after{display:none}
-  /* running bar: two identical sets slide -50%, so the loop is seamless */
-  .pillar-viewport{overflow:hidden;width:100vw;margin-left:calc(50% - 50vw)}
-  .pillar-track{width:max-content;justify-content:flex-start;gap:0;animation:pillarScroll 18s linear infinite}
+  .pillar-viewport{overflow:hidden}
+  .pillar-track{width:max-content;justify-content:flex-start;animation:pillarScroll 20s linear infinite}
   .pillar-track .pillar-dup{display:flex}
-  /* trailing pad matches the item gap, so each set is exactly half the track */
+  /* trailing pad equals the item gap so each set is exactly half the track */
   .pillar-row{flex-wrap:nowrap;gap:1.6rem;padding-right:1.6rem}
   .pillar-row li{font-size:clamp(.95rem,4vw,1.15rem);gap:.3rem}
   .pillar-row li svg{width:.95em;height:.95em}
@@ -548,11 +548,8 @@ footer .fcol a:hover{opacity:1}
 
 <section id="thanks" class="thanks-view" aria-label="You've joined the waitlist">
   <div class="join-inner">
-    <div class="thanks-mark" aria-hidden="true">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-    </div>
     <span class="badge"><span class="badge-dot"></span> Founding member <b id="wlPos">18</b></span>
-    <h1 class="thanks-h1">Congrats, you've just earned <b class="pop">50% OFF onyx FOR LIFE</b>.<br>You're officially in line!</h1>
+    <h1 class="thanks-h1">You're officially in line!<br>50% OFF FOR LIFE UNLOCKED</h1>
     <p class="lede">We'll begin rolling out access in small groups starting October 2026. Keep an eye on your inbox, we'll reach out as spots open.</p>
     <div class="thanks-cta">
       <a class="btn btn-primary" href="#top">Explore onyx</a>
