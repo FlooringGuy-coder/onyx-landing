@@ -181,6 +181,9 @@ body.route-thanks .join-inner{animation:joinIn .45s ease both}
 .thanks-mark svg{width:30px;height:30px}
 .thanks-cta{display:flex;flex-direction:column;gap:.7rem;margin-top:2rem;width:100%;max-width:22rem}
 .thanks-cta .btn{width:100%;justify-content:center;padding-block:.85rem}
+/* longer congratulations headline needs a smaller size and a wider measure */
+.join-inner h1.thanks-h1{font-size:clamp(1.6rem,3.2vw,2.25rem);line-height:1.2;max-width:24ch}
+
 .hero-inner .wl-done{margin-top:1.4rem;text-align:center}
 .hero-inner .offer-line{margin-top:1.15rem;font-size:.9rem;color:var(--muted)}
 .pop{color:var(--accent);font-weight:600}
@@ -195,6 +198,17 @@ body.route-thanks .join-inner{animation:joinIn .45s ease both}
 /* refined opt-in form */
 .hero-form input{border-radius:12px;transition:border-color .15s ease, box-shadow .15s ease}
 .hero-form input:focus-visible{border-color:var(--accent)}
+
+/* phone field: country selector sits inside the same bordered box as the number */
+.phone-field{display:flex;align-items:stretch;border:1px solid var(--line);border-radius:12px;background:var(--card);box-shadow:var(--shadow);overflow:hidden;transition:border-color .15s ease}
+.phone-field select{flex:none;border:0;border-right:1px solid var(--line);background:transparent;font-family:var(--body);font-size:1rem;color:var(--text);padding:.82rem .5rem .82rem .85rem;cursor:pointer;appearance:none;-webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235B6472' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right .5rem center;background-size:.85em;padding-right:1.9rem}
+.phone-field input{border:0;border-radius:0;box-shadow:none;background:transparent;flex:1}
+.phone-field input:focus-visible{outline:none;border:0}
+.phone-field:focus-within{border-color:var(--accent);box-shadow:0 0 0 2px rgba(30,123,255,.18)}
+/* invalid state — red outline on the whole control */
+.phone-field[data-invalid="true"],.hero-form input[aria-invalid="true"]{border-color:#D93025;box-shadow:0 0 0 2px rgba(217,48,37,.14)}
 .btn-primary{box-shadow:0 1px 2px rgba(30,123,255,.18)}
 .btn-primary:hover{box-shadow:0 8px 20px -6px rgba(30,123,255,.4);transform:translateY(-1px) scale(1.01)}
 /* gentle entrance stagger for the single fold */
@@ -474,17 +488,26 @@ footer .fcol a:hover{opacity:1}
 <section id="join" class="join-view" aria-label="Join the onyx waitlist">
   <div class="join-inner">
     <a class="join-back" href="#top">&larr; Back</a>
-    <span class="badge"><span class="badge-dot"></span> Join the founding <b style="color:var(--accent)">500</b></span>
-    <h1>Join the onyx waitlist.</h1>
-    <p class="lede">Drop your details and you're a founding member — 50% off for life, and first access when onyx launches on 1 October 2026.</p>
+    <h1>Apply for <img class="inline-wordmark" src="data:image/png;base64,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" alt="onyx"> Invite-Only Access</h1>
+    <p class="lede">We're rolling out onyx gradually starting October 2026.<br>Join the waitlist for exclusive, invite-only access.</p>
     <form class="hero-form" id="wlForm" novalidate>
       <div class="hf-grid">
         <input type="text" id="wlName" required autocomplete="name" placeholder="Your name" aria-label="Your name">
         <input type="text" id="wlBiz" required autocomplete="organization" placeholder="Business name" aria-label="Business name">
-        <input type="tel" id="wlPhone" required autocomplete="tel" placeholder="Phone" aria-label="Phone number">
+        <div class="phone-field" id="wlPhoneField">
+          <select id="wlCountry" aria-label="Country calling code">
+            <option value="+61" data-flag="🇦🇺" data-len="9" data-hint="0412 345 678" selected>🇦🇺 +61</option>
+            <option value="+64" data-flag="🇳🇿" data-len="9" data-hint="021 234 5678">🇳🇿 +64</option>
+            <option value="+1"  data-flag="🇺🇸" data-len="10" data-hint="(555) 123 4567">🇺🇸 +1</option>
+            <option value="+44" data-flag="🇬🇧" data-len="10" data-hint="07400 123456">🇬🇧 +44</option>
+            <option value="+353" data-flag="🇮🇪" data-len="9" data-hint="085 123 4567">🇮🇪 +353</option>
+            <option value="+27" data-flag="🇿🇦" data-len="9" data-hint="082 123 4567">🇿🇦 +27</option>
+          </select>
+          <input type="tel" id="wlPhone" required autocomplete="tel" placeholder="0412 345 678" aria-label="Phone number" inputmode="tel">
+        </div>
         <input type="email" id="wlEmail" required autocomplete="email" placeholder="you@yourcompany.com" aria-label="Email address">
       </div>
-      <button class="btn btn-primary" type="submit">Join the waitlist</button>
+      <button class="btn btn-primary" type="submit">CLAIM 50% OFF FOR LIFE</button>
     </form>
     <p class="form-error" id="formError" role="alert" hidden></p>
     <p class="offer-line">No credit card. We'll only ever email you about onyx.</p>
@@ -497,11 +520,10 @@ footer .fcol a:hover{opacity:1}
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
     </div>
     <span class="badge"><span class="badge-dot"></span> Founding member <b id="wlPos">18</b></span>
-    <h1>You're in.</h1>
-    <p class="lede">You've just earned <b class="pop">50% off onyx for life</b>. We'll email you before we launch on 1 October 2026 — keep an eye on your inbox.</p>
+    <h1 class="thanks-h1">Congrats, you've just earned <b class="pop">50% OFF onyx FOR LIFE</b>.<br>You're officially in line!</h1>
+    <p class="lede">We'll begin rolling out access in small groups starting October 2026. Keep an eye on your inbox, we'll reach out as spots open.</p>
     <div class="thanks-cta">
-      <a class="btn btn-primary" href="https://www.skool.com/" target="_blank" rel="noopener">Join our free Skool community</a>
-      <a class="btn btn-ghost" href="#top">Exit this page</a>
+      <a class="btn btn-primary" href="#top">Explore onyx</a>
     </div>
   </div>
 </section>
@@ -564,29 +586,58 @@ footer .fcol a:hover{opacity:1}
       var phone=document.getElementById('wlPhone');
       var email=document.getElementById('wlEmail');
       var errEl=document.getElementById('formError');
+      var country=document.getElementById('wlCountry');
+      var phoneField=document.getElementById('wlPhoneField');
       [name,biz,phone,email].forEach(function(f){f.removeAttribute('aria-invalid')});
+      phoneField.removeAttribute('data-invalid');
       var msg=null, firstBad=null;
-      function bad(f,m){ if(!firstBad){ firstBad=f; msg=m; } f.setAttribute('aria-invalid','true'); }
-      var phoneDigits=phone.value.replace(/[^\d]/g,'');
-      if(name.value.trim().length<2) bad(name,'Enter your full name.');
-      if(biz.value.trim().length<2) bad(biz,'Enter your business name.');
-      if(phoneDigits.length<8 || phoneDigits.length>15) bad(phone,'Enter a valid phone number.');
-      if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.value.trim())) bad(email,'Enter a valid email address.');
+      function bad(f,m){ if(!firstBad){ firstBad=f; msg=m; } f.setAttribute('aria-invalid','true');
+        if(f===phone) phoneField.setAttribute('data-invalid','true'); }
+
+      // name: at least two letters, must contain letters (blocks "123" / "aa")
+      var nameVal=name.value.trim();
+      if(nameVal.length<2 || !/[A-Za-z\u00C0-\u024F]{2,}/.test(nameVal)) bad(name,'Enter your full name.');
+
+      // business: same idea, letters required
+      var bizVal=biz.value.trim();
+      if(bizVal.length<2 || !/[A-Za-z\u00C0-\u024F]{2,}/.test(bizVal)) bad(biz,'Enter your business name.');
+
+      // phone: digit count must match the selected country, leading 0 stripped
+      var opt=country.options[country.selectedIndex];
+      var wantLen=parseInt(opt.getAttribute('data-len'),10);
+      var cc=country.value.replace(/[^\d]/g,'');
+      var digits=phone.value.replace(/[^\d]/g,'');
+      // tolerate a pasted country code ("+61 412 345 678")
+      if(digits.indexOf(cc)===0 && digits.length>wantLen) digits=digits.slice(cc.length);
+      digits=digits.replace(/^0+/,'');
+      if(digits.length!==wantLen || /^(\d)\1+$/.test(digits)){
+        bad(phone,'Enter a valid '+opt.textContent.trim()+' phone number.');
+      }
+
+      // email: structural check, then reject obvious throwaways and typo'd TLDs
+      var emailVal=email.value.trim().toLowerCase();
+      var emailOk=/^[^\s@]+@[^\s@.]+(\.[^\s@.]+)+$/.test(emailVal)
+        && emailVal.length<=254
+        && !/\.\.|^\.|\.@|@\./.test(emailVal)
+        && /\.[a-z]{2,}$/.test(emailVal);
+      var badDomains=['test.com','example.com','mailinator.com','tempmail.com','guerrillamail.com','10minutemail.com','yopmail.com','trashmail.com'];
+      if(emailOk && badDomains.indexOf(emailVal.split('@')[1])>-1) emailOk=false;
+      if(!emailOk) bad(email,'Enter a valid email address.');
       if(firstBad){ errEl.textContent=msg; errEl.hidden=false; firstBad.focus(); return; }
       errEl.hidden=true;
       var btn=form.querySelector('button');
       if(btn){ btn.disabled=true; btn.textContent='Joining…'; }
 
-      var payload={ name:name.value.trim(), business:biz.value.trim(), phone:phone.value.trim(), email:email.value.trim().toLowerCase() };
+      var payload={ name:name.value.trim(), business:biz.value.trim(), phone:document.getElementById('wlCountry').value+' '+phone.value.trim(), email:email.value.trim().toLowerCase() };
 
       function finish(n){                       // success → thanks page
         wlStore(n); wlShow(n);
         var p=document.getElementById('wlPos'); if(p) p.textContent=Number(n).toLocaleString();
         location.hash='#thanks';
-        if(btn){ btn.disabled=false; btn.textContent='Join the waitlist'; }
+        if(btn){ btn.disabled=false; btn.textContent='CLAIM 50% OFF FOR LIFE'; }
       }
       function fail(m){
-        if(btn){ btn.disabled=false; btn.textContent='Join the waitlist'; }
+        if(btn){ btn.disabled=false; btn.textContent='CLAIM 50% OFF FOR LIFE'; }
         errEl.textContent=m||'Something went wrong. Please try again.'; errEl.hidden=false;
       }
 
@@ -607,6 +658,26 @@ footer .fcol a:hover{opacity:1}
       }
     });
   }
+  // clear the invalid state as soon as the field is edited
+  ['wlName','wlBiz','wlPhone','wlEmail'].forEach(function(id){
+    var el=document.getElementById(id); if(!el) return;
+    el.addEventListener('input',function(){
+      el.removeAttribute('aria-invalid');
+      var pf=document.getElementById('wlPhoneField');
+      if(id==='wlPhone'&&pf) pf.removeAttribute('data-invalid');
+    });
+  });
+  // keep the placeholder in step with the selected country
+  (function(){
+    var c=document.getElementById('wlCountry'), p=document.getElementById('wlPhone');
+    if(!c||!p) return;
+    c.addEventListener('change',function(){
+      p.placeholder=c.options[c.selectedIndex].getAttribute('data-hint')||'';
+      p.removeAttribute('aria-invalid');
+      document.getElementById('wlPhoneField').removeAttribute('data-invalid');
+    });
+  })();
+
   // routing: #join shows the separate lead-form "page", anything else shows the landing
   function route(){
     var h=location.hash;
