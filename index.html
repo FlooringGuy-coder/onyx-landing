@@ -50,6 +50,7 @@
   --display:'Geist',ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;
   --body:'Geist',ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;
   --mono:'Fragment Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+
 }
 /* Deliberately single-theme (all white). No dark override, so it stays white for every viewer. */
 
@@ -82,10 +83,11 @@ a{color:inherit}
 .btn:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 
 /* nav */
-header.nav{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--ground) 97%, transparent);backdrop-filter:saturate(140%) blur(10px);border-bottom:1px solid transparent;transition:border-color .2s ease,background-color .2s ease}
-/* iOS renders backdrop-blur weakly — keep the bar opaque once content scrolls under it */
+header.nav{position:sticky;top:0;z-index:50;background:transparent;border-bottom:1px solid transparent;transition:border-color .2s ease,background-color .2s ease}
+/* Transparent at rest so the gradient runs to the top edge. Alex's fix is kept for the
+   scrolled state: iOS renders backdrop-blur weakly, so go fully opaque once content
+   actually passes under the bar, otherwise the headline ghosts through. */
 header.nav.scrolled{background:var(--ground)}
-@supports not (backdrop-filter:blur(10px)){header.nav{background:var(--ground)}}
 /* mobile: no opaque bar — let the background run to the top edge. The nav scrolls
    away with the page instead of sticking, so nothing ghosts under the logo. */
 @media (max-width:900px){
@@ -105,18 +107,18 @@ header.nav.scrolled{border-bottom-color:var(--line)}
 .hero{padding-top:clamp(3rem,6vw,5rem)}
 .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(2rem,5vw,4.5rem);align-items:center}
 @media (max-width:900px){.hero-grid{grid-template-columns:1fr;gap:2.5rem}}
-.hero h1{font-size:clamp(2.5rem,5.6vw,4.15rem);margin-top:1.1rem}
+.hero h1{font-size:clamp(2.5rem,5.6vw,4.15rem);margin-top:0}
 .hero .lede{margin-top:1.4rem;font-size:clamp(1.08rem,1.7vw,1.32rem);max-width:44ch;line-height:1.5}
 .hero-cta{display:flex;gap:.85rem;margin-top:2rem;flex-wrap:wrap}
 .reassure{display:flex;align-items:center;gap:.6rem;margin-top:1.15rem;font-family:var(--mono);font-size:.8rem;color:var(--muted)}
 .reassure .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex:none}
-.wl-proof{display:flex;align-items:center;gap:.7rem;margin-top:1.6rem}
+.wl-proof{display:flex;flex-direction:column;align-items:center;gap:.9rem;margin-top:1.6rem}
 .wl-proof .avatars{display:flex;flex:none}
 .wl-proof .avatars span{width:30px;height:30px;border-radius:50%;background:var(--card);border:1px solid var(--line);margin-left:-9px;display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:.66rem;color:var(--muted);box-shadow:var(--shadow)}
 .wl-proof .avatars span:first-child{margin-left:0}
 .wl-proof .avatars span.more{background:var(--accent);color:#fff;border-color:transparent}
-.wl-proof .wl-text{font-size:.95rem;color:var(--muted)}
-.wl-proof .wl-text b{color:var(--text);font-weight:600;font-variant-numeric:tabular-nums}
+.wl-proof .wl-text{font-family:var(--display);font-size:clamp(1.25rem,2.4vw,1.7rem);line-height:1.25;letter-spacing:-.02em;color:var(--text);font-weight:500}
+.wl-proof .wl-text b{color:var(--accent);font-weight:700;font-size:1.1em;font-variant-numeric:tabular-nums}
 .wl-proof .ns{color:var(--muted)}
 
 /* opt-in form — appearance only. Layout lives in ONE place (the .hero-form /
@@ -133,7 +135,9 @@ header.nav.scrolled{border-bottom-color:var(--line)}
 @media (prefers-reduced-motion:reduce){.hl{transition:none}}
 
 /* centered single-fold hero (kinso-style format) */
-.hero{min-height:calc(100dvh - 64px);display:grid;place-items:center;padding:clamp(2.5rem,7vh,5rem) 0}
+/* pulled up under the transparent nav so the block centres on the true viewport
+   centre rather than the centre of the space below the bar */
+.hero{min-height:100dvh;margin-top:-64px;display:grid;place-items:center;padding:clamp(.75rem,2.5vh,2rem) 0}
 .hero-inner{width:min(720px,92vw);margin-inline:auto;text-align:center;display:flex;flex-direction:column;align-items:center}
 .hero-inner .eyebrow{font-size:.8rem}
 .hero-inner h1{font-size:clamp(2.4rem,6vw,4.1rem);margin-top:1.25rem;max-width:16ch}
@@ -144,7 +148,10 @@ header.nav.scrolled{border-bottom-color:var(--line)}
 .hf-grid input{min-width:0;width:100%}
 @media (max-width:560px){.hf-grid{grid-template-columns:1fr}}
 .hero-form>.btn{width:100%;justify-content:center;padding-block:.85rem}
-.hero-join{margin-top:1.7rem;padding:.9rem 1.7rem;font-size:1rem}
+.hero-join{margin-top:1.7rem;padding:.9rem 1.9rem;font-size:1rem;gap:.5rem}
+.hero-join svg{width:1.05em;height:1.05em;flex:none;transition:transform .25s ease}
+.hero-join:hover svg{transform:translateX(3px)}
+@media (prefers-reduced-motion:reduce){.hero-join svg{transition:none}.hero-join:hover svg{transform:none}}
 
 /* separate lead-form "page" (routed via #join), same design system */
 .join-view{display:none;position:relative;z-index:1}
@@ -207,16 +214,36 @@ body.route-thanks .join-inner{animation:joinIn .45s ease both}
    restore by re-adding .hero-vsl markup and the two-column values below) */
 .hero-grid2{width:min(820px,92vw);margin-inline:auto;display:grid;grid-template-columns:1fr;gap:clamp(2rem,5vw,4rem);align-items:center}
 .hero-copy{text-align:center;display:flex;flex-direction:column;align-items:center}
-.hero-copy h1{font-size:clamp(2.15rem,4.4vw,3.6rem);letter-spacing:-.035em;line-height:1.04;max-width:17ch}
-.hero-copy .lede{margin-top:1.35rem;max-width:52ch;color:var(--muted);font-size:clamp(1.02rem,1.5vw,1.2rem);line-height:1.55}
+.hero-copy h1{font-size:clamp(2.15rem,4.4vw,3.6rem);letter-spacing:-.035em;line-height:1.04;max-width:22ch}
+.hero-copy h1 .accent{color:var(--accent);font-weight:inherit}
+.hero-copy .hero-sub{margin-top:1rem;font-family:var(--display);font-weight:500;font-size:clamp(1.08rem,1.9vw,1.4rem);letter-spacing:-.015em;color:var(--text)}
+.hero-copy .lede{margin-top:1.35rem;max-width:56ch;color:var(--text);font-size:clamp(.98rem,1.35vw,1.1rem);line-height:1.6}
+.hero-copy .lede b{color:var(--text);font-weight:600}
+/* body copy under the lede */
+.hero-body{margin-top:1.1rem;display:flex;flex-direction:column;align-items:center;gap:.85rem}
+.hero-body p{margin:0;max-width:64ch;color:var(--text);font-size:clamp(.98rem,1.35vw,1.1rem);line-height:1.6}
+.hero-body b{font-weight:600}
+/* the word "onyx" set as the wordmark itself — sized to sit on the text baseline */
+.inline-wordmark{height:.72em;width:auto;display:inline-block;vertical-align:-.18em}
+/* capability row — blue ticks, pipe separators, AI credit underneath */
+.hero-pillars{margin-top:1.4rem}
+.pillar-row{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:.5rem .85rem;list-style:none;margin:0;padding:0}
+.pillar-row li{display:inline-flex;align-items:center;gap:.4rem;font-family:var(--display);font-weight:500;font-size:clamp(.95rem,1.45vw,1.1rem);color:var(--text);white-space:nowrap}
+.pillar-row li svg{width:.95em;height:.95em;flex:none;color:var(--accent)}
+.pillar-row li:not(:last-child)::after{content:"|";margin-left:.85rem;color:var(--accent);font-weight:400}
+@media (max-width:520px){.pillar-row li:not(:last-child)::after{display:none}.pillar-row{gap:.45rem 1rem}}
 .hero-copy .wl-proof{margin-top:1.8rem;justify-content:center}
 .hero-copy .hero-join{margin-top:1.5rem}
-.hero-copy .offer-line{margin-top:1.1rem;font-size:.88rem;color:var(--muted)}
+.hero-copy .offer-line{margin-top:1.1rem;font-size:.88rem;color:var(--muted);text-align:center}
+.offer-line .offer-sub{color:var(--muted)}
 .hero-copy>.reveal:nth-child(1){transition-delay:0ms}
 .hero-copy>.reveal:nth-child(2){transition-delay:120ms}
 .hero-copy>.reveal:nth-child(3){transition-delay:240ms}
 .hero-copy>.reveal:nth-child(4){transition-delay:340ms}
 .hero-copy>.reveal:nth-child(5){transition-delay:440ms}
+.hero-copy>.reveal:nth-child(6){transition-delay:530ms}
+.hero-copy>.reveal:nth-child(7){transition-delay:610ms}
+.hero-copy>.reveal:nth-child(8){transition-delay:690ms}
 @media (prefers-reduced-motion:reduce){.hero-copy>.reveal{transition-delay:0ms}}
 .hero-vsl{width:100%}
 .vsl-frame{position:relative;width:100%;aspect-ratio:16/9;border-radius:16px;border:1px solid var(--line);background:var(--subtle);box-shadow:var(--shadow-lg);display:grid;place-items:center;overflow:hidden}
@@ -375,6 +402,7 @@ footer .fcol a:hover{opacity:1}
 .tt:hover{color:var(--text);border-color:var(--text)}
 .wordmark img.logo-img{height:30px;width:auto;display:block}
 @media (max-width:640px){.wordmark img.logo-img{height:26px}}
+
 </style>
 </head>
 <body>
@@ -398,14 +426,26 @@ footer .fcol a:hover{opacity:1}
   <section class="hero" id="hero">
     <div class="hero-grid2">
       <div class="hero-copy">
-        <h1 class="reveal">Built for epoxy businesses,<br>by installers.</h1>
-        <p class="lede reveal">onyx brings your quotes, jobs, calendar and invoices into one place that actually understands an epoxy business. Price a flake floor in minutes, follow every job from grind and prep through to cure and paid, so nothing slips between the cracks and chaos.</p>
-        <div class="wl-proof reveal">
-          <div class="avatars"><span>JK</span><span>RC</span><span>DP</span><span class="more">+</span></div>
-          <span class="wl-text"><b data-wl-count>17</b> of 500 founding spots claimed</span>
+        <h1 class="reveal"><span class="accent">One system</span> to run your<br>entire epoxy business.</h1>
+        <p class="hero-sub reveal">Built by installers, for installers.</p>
+        <p class="lede reveal">Every other system waits for you to do the work, <b>onyx does it for you.</b></p>
+        <div class="hero-body reveal">
+          <p>It brings <b>every tool</b> you're paying for into <b>one system</b>,<br><b>learns how you operate</b>, then runs it for you.</p>
         </div>
-        <a class="btn btn-primary hero-join reveal" href="#join">Join the waitlist</a>
-        <p class="offer-line reveal">Founding members lock in <b class="pop">50% off, for life</b>. No credit card to join.</p>
+        <div class="hero-pillars reveal">
+          <ul class="pillar-row">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Marketing</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Sales</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Jobs</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Finances</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Payments</li>
+          </ul>
+        </div>
+        <div class="wl-proof reveal">
+          <span class="wl-text">Join <b data-wl-count>17</b> others on the waitlist.</span>
+        </div>
+        <a class="btn btn-primary hero-join reveal" href="#join">Join now <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a>
+        <p class="offer-line reveal">Founding members lock in <b class="pop">50% OFF FOR LIFE.</b> <span class="offer-sub">No credit card to join.</span></p>
       </div>
     </div>
   </section>
@@ -446,6 +486,7 @@ footer .fcol a:hover{opacity:1}
     </div>
   </div>
 </section>
+
 
 
 <script>
